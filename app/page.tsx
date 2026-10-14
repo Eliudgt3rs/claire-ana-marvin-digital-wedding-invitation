@@ -53,66 +53,87 @@ export default function Page() {
     setIsOpening(true)
     setTimeout(() => {
       setIntro(false)
-    }, 2000)
+    }, 700)
   }
 
   return <main className="invitation">
-    <AnimatePresence>{intro && <motion.section className="intro" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .8 }}>
-      <div className="intro-copy">
+    <AnimatePresence>{intro && <motion.section className="intro" initial={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.1, filter: 'blur(8px)' }} transition={{ duration: .5, ease: 'easeInOut' }}>
+      <motion.div 
+        className="intro-copy"
+        animate={isOpening ? { opacity: 0, y: -20, filter: 'blur(4px)' } : { opacity: 1, y: 0, filter: 'blur(0px)' }}
+        transition={{ duration: 0.3 }}
+      >
         <span className="eyebrow">A little note for you</span>
         <h1>Sandra <i>&</i> Marvin</h1>
         <p>November 14, 2026 · Mombasa, Kenya</p>
-      </div>
+      </motion.div>
 
       <motion.button 
         className="envelope-wrap" 
         onClick={handleOpen}
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
-        animate={isOpening ? { scale: 1.05, opacity: 0.98 } : { scale: 1, opacity: 1, y: 0 }}
-        transition={{ duration: isOpening ? 2 : 0.8, ease: 'easeInOut' }}
+        animate={isOpening ? { scale: 1.2, opacity: 0, filter: 'blur(4px)' } : { scale: 1, opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeInOut' }}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
-        <div className="envelope">
-          <motion.div 
-            className="card-inside"
-            initial={{ y: 0, scale: 0.95 }}
-            animate={isOpening ? { y: -200, scale: 1.05, opacity: [1, 1, 0.9] } : { y: 0, scale: 0.95 }}
-            transition={{ duration: 1.6, delay: 0.3, ease: [0.25, 1, 0.5, 1] }}
-          >
-            <span className="eyebrow">Wedding Invitation</span>
-            <h3>Sandra <i>&</i> Marvin</h3>
-            <p>November 14, 2026 · Mombasa, Kenya</p>
-          </motion.div>
-
+        <div className="envelope" style={{ transformStyle: 'preserve-3d', perspective: 1000 }}>
           <div className="paper-lines" />
+
+          {/* Top Flap Opens Up */}
           <motion.div 
             className="flap"
             animate={isOpening ? { rotateX: -180, zIndex: 0 } : { rotateX: 0, zIndex: 5 }}
-            transition={{ duration: 1.2, ease: 'easeInOut' }}
-            style={{ transformOrigin: 'top' }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            style={{ transformOrigin: 'top', backfaceVisibility: 'hidden' }}
           />
+
+          {/* Bottom Front Fold Opens Down */}
+          <motion.div 
+            animate={isOpening ? { rotateX: 180, opacity: 0 } : { rotateX: 0, opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.1, ease: 'easeInOut' }}
+            style={{ 
+              position: 'absolute', 
+              inset: 0, 
+              background: '#3a0b13', 
+              clipPath: 'polygon(0 100%, 50% 45%, 100% 100%)', 
+              transformOrigin: 'bottom',
+              zIndex: 3,
+              backfaceVisibility: 'hidden'
+            }}
+          />
+
+          {/* Wax Seal */}
           <motion.div 
             className="seal"
             animate={isOpening ? { scale: 0, opacity: 0 } : { scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.15 }}
           >
             S & M
           </motion.div>
         </div>
-        <p style={{ marginTop: '1.4rem', color: '#f3d6a1', fontSize: '0.65rem', letterSpacing: '0.22em', textTransform: 'uppercase', fontWeight: 600 }}>
+
+        <motion.p 
+          style={{ marginTop: '1.4rem', color: '#f3d6a1', fontSize: '0.65rem', letterSpacing: '0.22em', textTransform: 'uppercase', fontWeight: 600 }}
+          animate={isOpening ? { opacity: 0 } : { opacity: 1 }}
+          transition={{ duration: 0.2 }}
+        >
           {isOpening ? 'Opening invitation...' : 'Tap to open envelope'}
-        </p>
+        </motion.p>
       </motion.button>
 
-      <button className="skip" onClick={() => setIntro(false)}>
+      <motion.button 
+        className="skip" 
+        onClick={() => setIntro(false)}
+        animate={isOpening ? { opacity: 0 } : { opacity: 0.8 }}
+      >
         Skip intro <ArrowDown />
-      </button>
+      </motion.button>
     </motion.section>}</AnimatePresence>
 
    
 
-    {!intro && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
       <section className="hero" id="top">
         <div className="hero-image" />
         <div className="hero-overlay" />
@@ -137,6 +158,6 @@ export default function Page() {
 
       <section className="rsvp-section" id="rsvp"><Reveal>{submitted ? <div className="success"><Sparkles /><SectionKicker>It’s official</SectionKicker><h3>Thank you!<br /><em>We’ll see you there.</em></h3><p>We’re so happy you’ll be part of our day.</p></div> : <><SectionKicker>Kindly reply</SectionKicker><h3>Will you join <em>us?</em></h3><form onSubmit={(e) => { e.preventDefault(); setSubmitted(true) }}><div className="choice-group">{[['attending', 'Joyfully accepts'], ['maybe', 'Will let you know'], ['decline', 'Regretfully declines']].map(([value, label]) => <button type="button" key={value} className={rsvp === value ? 'selected' : ''} onClick={() => setRsvp(value)}><span>{rsvp === value ? '●' : '○'}</span>{label}</button>)}</div><input required aria-label="Full name" placeholder="Full name" /><input required type="email" aria-label="Email address" placeholder="Email address" /><textarea aria-label="Message" placeholder="Leave a note for the hosts (optional)" rows={3} /><button className="submit" type="submit">Send RSVP <Send /></button></form></>}</Reveal></section>
       <footer><span className="monogram">S <i>&</i> M</span><p>With love, Sandra & Marvin</p><a href="#top"><ArrowUp /></a></footer>      
-    </motion.div>}
+    </motion.div>
   </main>
 }
