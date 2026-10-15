@@ -1,0 +1,18 @@
+[
+  {
+    "id": "sample-1",
+    "name": "Amina Mwangi",
+    "email": "amina@example.com",
+    "status": "attending",
+    "message": "Wishing you both a lifetime of love and joy!",
+    "createdAt": "2026-10-15T10:30:00.000Z"
+  },
+  {
+    "id": "sample-2",
+    "name": "David Kiprop",
+    "email": "david@example.com",
+    "status": "maybe",
+    "message": "Trying my best to make it from Nairobi!",
+    "createdAt": "2026-10-15T11:15:00.000Z"
+  }
+]

@@ -38,6 +38,10 @@ export default function Page() {
   const [intro, setIntro] = useState(true)
   const [isOpening, setIsOpening] = useState(false)
   const [rsvp, setRsvp] = useState('attending')
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
@@ -156,7 +160,7 @@ export default function Page() {
 
       <section className="section story-section"><Reveal><SectionKicker>Our story</SectionKicker><h3>From one little <em>hello</em></h3><p className="lead">Somehow, the best things in life start in the most ordinary places.</p><div className="story-list">{story.map(([year, title, copy]) => <article className="story-item" key={year}><span className="story-year">{year}</span><div><h4>{title}</h4><p>{copy}</p></div></article>)}</div></Reveal></section>
 
-      <section className="gallery-section"><div className="gallery-heading"><div><SectionKicker>Little moments</SectionKicker><h3>Our favorite <em>memories</em></h3></div><span className="gallery-count">01 / 03</span></div><div className="gallery">{photos.map((photo, i) => <motion.img key={photo.src} src={photo.src} alt={photo.alt} whileHover={{ scale: 1.03 }} className={i === 0 ? 'featured' : ''} />)}</div><div className="dots"><span className="active" /><span /><span /></div></section>
+      <section className="gallery-section"><div className="gallery-heading"><div><SectionKicker>Little moments</SectionKicker><h3>A Celebration <em>of Love</em></h3></div><span className="gallery-count">01 / 03</span></div><div className="gallery">{photos.map((photo, i) => <motion.img key={photo.src} src={photo.src} alt={photo.alt} whileHover={{ scale: 1.03 }} className={i === 0 ? 'featured' : ''} />)}</div><div className="dots"><span className="active" /><span /><span /></div></section>
 
       <section className="section schedule-section"><Reveal><SectionKicker>The day</SectionKicker><h3>A day to <em>remember</em></h3><div className="schedule">{schedule.map(([icon, time, title, copy], index) => <div className="schedule-row" key={index}><div className="schedule-icon">{icon}</div><div><span>{time}</span><h4>{title}</h4><p>{copy}</p></div></div>)}</div></Reveal></section>
 
@@ -209,8 +213,25 @@ export default function Page() {
 
       <section className="section faq-section"><Reveal><SectionKicker>Questions</SectionKicker><h3>Before you <em>arrive</em></h3><div className="faq-list">{faqs.map(([q, a], i) => <div className="faq" key={q}><button onClick={() => setOpenFaq(openFaq === i ? null : i)} aria-expanded={openFaq === i}><span>{q}</span><ChevronDown className={openFaq === i ? 'rotated' : ''} /></button><AnimatePresence>{openFaq === i && <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>{a}</motion.p>}</AnimatePresence></div>)}</div></Reveal></section>
 
-      <section className="rsvp-section" id="rsvp"><Reveal>{submitted ? <div className="success"><Sparkles /><SectionKicker>It’s official</SectionKicker><h3>Thank you!<br /><em>We’ll see you there.</em></h3><p>We’re so happy you’ll be part of our day.</p></div> : <><SectionKicker>Kindly reply</SectionKicker><h3>Will you join <em>us?</em></h3><form onSubmit={(e) => { e.preventDefault(); setSubmitted(true) }}><div className="choice-group">{[['attending', 'Joyfully accepts'], ['maybe', 'Will let you know'], ['decline', 'Regretfully declines']].map(([value, label]) => <button type="button" key={value} className={rsvp === value ? 'selected' : ''} onClick={() => setRsvp(value)}><span>{rsvp === value ? '●' : '○'}</span>{label}</button>)}</div><input required aria-label="Full name" placeholder="Full name" /><input required type="email" aria-label="Email address" placeholder="Email address" /><textarea aria-label="Message" placeholder="Leave a note for the hosts (optional)" rows={3} /><button className="submit" type="submit">Send RSVP <Send /></button></form></>}</Reveal></section>
-      <footer><span className="monogram">S <i>&</i> M</span><p>With love, Sandra & Marvin</p><a href="#top"><ArrowUp /></a></footer>      
+      <section className="rsvp-section" id="rsvp"><Reveal>{submitted ? <div className="success"><Sparkles /><SectionKicker>It’s official</SectionKicker><h3>Thank you!<br /><em>We’ll see you there.</em></h3><p>We’re so happy you’ll be part of our day.</p></div> : <><SectionKicker>Kindly reply</SectionKicker><h3>Will you join <em>us?</em></h3><form onSubmit={async (e) => {
+        e.preventDefault()
+        setLoading(true)
+        try {
+          const res = await fetch('/api/rsvp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, status: rsvp, message })
+          })
+          if (res.ok) {
+            setSubmitted(true)
+          }
+        } catch (err) {
+          console.error(err)
+        } finally {
+          setLoading(false)
+        }
+      }}><div className="choice-group">{[['attending', 'Joyfully accepts'], ['maybe', 'Will let you know'], ['decline', 'Regretfully declines']].map(([value, label]) => <button type="button" key={value} className={rsvp === value ? 'selected' : ''} onClick={() => setRsvp(value)}><span>{rsvp === value ? '●' : '○'}</span>{label}</button>)}</div><input required aria-label="Full name" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} /><input required type="email" aria-label="Email address" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} /><textarea aria-label="Message" placeholder="Leave a note for the hosts (optional)" rows={3} value={message} onChange={(e) => setMessage(e.target.value)} /><button className="submit" type="submit" disabled={loading}>{loading ? 'Sending...' : 'Send RSVP'} <Send /></button></form></>}</Reveal></section>
+      <footer><span className="monogram">S <i>&</i> M</span><p>With love, Sandra & Marvin</p><div className="footer-links"><a href="/admin" className="host-dashboard-link">Host Dashboard</a><a href="#top" className="top-link" aria-label="Scroll to top"><ArrowUp /></a></div></footer>      
     </motion.div>
   </main>
 }
