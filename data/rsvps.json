@@ -1,12 +1,5 @@
 [
-  {
-    "id": "1792098092932",
-    "name": "HFCXJFGMNKNL",
-    "email": "NHVCFGXVBH@DKCGHLJGHL.JVGLU",
-    "status": "attending",
-    "message": "",
-    "createdAt": "2026-10-15T21:01:32.932Z"
-  },
+  
   {
     "id": "sample-1",
     "name": "Amina Mwangi",
@@ -14,13 +7,5 @@
     "status": "attending",
     "message": "Wishing you both a lifetime of love and joy!",
     "createdAt": "2026-10-15T10:30:00.000Z"
-  },
-  {
-    "id": "sample-2",
-    "name": "David Kiprop",
-    "email": "david@example.com",
-    "status": "maybe",
-    "message": "Trying my best to make it from Nairobi!",
-    "createdAt": "2026-10-15T11:15:00.000Z"
   }
 ]
