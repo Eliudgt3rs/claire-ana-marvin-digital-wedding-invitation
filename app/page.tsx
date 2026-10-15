@@ -43,6 +43,7 @@ export default function Page() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [rsvpError, setRsvpError] = useState('')
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
 
@@ -216,21 +217,26 @@ export default function Page() {
       <section className="rsvp-section" id="rsvp"><Reveal>{submitted ? <div className="success"><Sparkles /><SectionKicker>It’s official</SectionKicker><h3>Thank you!<br /><em>We’ll see you there.</em></h3><p>We’re so happy you’ll be part of our day.</p></div> : <><SectionKicker>Kindly reply</SectionKicker><h3>Will you join <em>us?</em></h3><form onSubmit={async (e) => {
         e.preventDefault()
         setLoading(true)
+        setRsvpError('')
         try {
           const res = await fetch('/api/rsvp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, status: rsvp, message })
           })
-          if (res.ok) {
+          const data = await res.json().catch(() => ({}))
+          if (res.ok && data.success) {
             setSubmitted(true)
+          } else {
+            setRsvpError(data.error || 'Failed to submit RSVP. Please try again.')
           }
         } catch (err) {
           console.error(err)
+          setRsvpError('Network error. Please check your connection and try again.')
         } finally {
           setLoading(false)
         }
-      }}><div className="choice-group">{[['attending', 'Joyfully accepts'], ['maybe', 'Will let you know'], ['decline', 'Regretfully declines']].map(([value, label]) => <button type="button" key={value} className={rsvp === value ? 'selected' : ''} onClick={() => setRsvp(value)}><span>{rsvp === value ? '●' : '○'}</span>{label}</button>)}</div><input required aria-label="Full name" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} /><input required type="email" aria-label="Email address" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} /><textarea aria-label="Message" placeholder="Leave a note for the hosts (optional)" rows={3} value={message} onChange={(e) => setMessage(e.target.value)} /><button className="submit" type="submit" disabled={loading}>{loading ? 'Sending...' : 'Send RSVP'} <Send /></button></form></>}</Reveal></section>
+      }}><div className="choice-group">{[['attending', 'Joyfully accepts'], ['maybe', 'Will let you know'], ['decline', 'Regretfully declines']].map(([value, label]) => <button type="button" key={value} className={rsvp === value ? 'selected' : ''} onClick={() => setRsvp(value)}><span>{rsvp === value ? '●' : '○'}</span>{label}</button>)}</div><input required aria-label="Full name" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} /><input required type="email" aria-label="Email address" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} /><textarea aria-label="Message" placeholder="Leave a note for the hosts (optional)" rows={3} value={message} onChange={(e) => setMessage(e.target.value)} />{rsvpError && <p style={{ color: '#ffb4b4', fontSize: '0.75rem', margin: '0.2rem 0', textAlign: 'left' }}>{rsvpError}</p>}<button className="submit" type="submit" disabled={loading}>{loading ? 'Sending...' : 'Send RSVP'} <Send /></button></form></>}</Reveal></section>
       <footer><span className="monogram">S <i>&</i> M</span><p>With love, Sandra & Marvin</p><div className="footer-links"><a href="/admin" className="host-dashboard-link">Host Dashboard</a><a href="#top" className="top-link" aria-label="Scroll to top"><ArrowUp /></a></div></footer>      
     </motion.div>
   </main>

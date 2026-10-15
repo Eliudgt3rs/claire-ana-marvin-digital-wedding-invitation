@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs/promises'
-import path from 'path'
-
-const filePath = path.join(process.cwd(), 'data', 'rsvps.json')
+import { addRsvp, getRsvps } from '@/lib/rsvp-store'
 
 export async function POST(request: Request) {
   try {
@@ -13,29 +10,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    let rsvps = []
-    try {
-      const data = await fs.readFile(filePath, 'utf-8')
-      rsvps = JSON.parse(data)
-    } catch {
-      // If file doesn't exist, start with empty array
-      rsvps = []
-    }
-
-    const newRsvp = {
-      id: Date.now().toString(),
-      name,
-      email,
-      status,
-      message: message || '',
-      createdAt: new Date().toISOString(),
-    }
-
-    rsvps.unshift(newRsvp)
-
-    // Ensure directory exists
-    await fs.mkdir(path.dirname(filePath), { recursive: true })
-    await fs.writeFile(filePath, JSON.stringify(rsvps, null, 2), 'utf-8')
+    const newRsvp = await addRsvp({ name, email, status, message: message || '' })
 
     return NextResponse.json({ success: true, rsvp: newRsvp })
   } catch (error) {
@@ -46,8 +21,7 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const data = await fs.readFile(filePath, 'utf-8')
-    const rsvps = JSON.parse(data)
+    const rsvps = await getRsvps()
     return NextResponse.json(rsvps)
   } catch {
     return NextResponse.json([])

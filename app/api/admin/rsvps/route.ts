@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs/promises'
-import path from 'path'
+import { getRsvps } from '@/lib/rsvp-store'
 
-const filePath = path.join(process.cwd(), 'data', 'rsvps.json')
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'wedding2026'
 
 export async function POST(request: Request) {
@@ -13,13 +11,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid password' }, { status: 401 })
     }
 
-    let rsvps = []
-    try {
-      const data = await fs.readFile(filePath, 'utf-8')
-      rsvps = JSON.parse(data)
-    } catch {
-      rsvps = []
-    }
+    const rsvps = await getRsvps()
 
     return NextResponse.json({ success: true, rsvps })
   } catch (error) {
