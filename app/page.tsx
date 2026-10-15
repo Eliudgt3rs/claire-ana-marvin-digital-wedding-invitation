@@ -11,22 +11,22 @@ const photos = [
   { src: '/rings.avif', alt: 'Couple embracing outdoors' },
 ]
 const story = [
-  ['2018', 'How we met', 'A rainy Tuesday, one shared umbrella, and a conversation that lasted until the café closed.'],
-  ['2020', 'First adventure', 'We packed two bags and drove north with no itinerary — just a playlist and a full tank of gas.'],
-  ['2024', 'The proposal', 'Under the old oak tree where we had our first picnic, Marvin asked the easiest question.'],
+  ['2018', 'How we met', 'It was a torrential rainy Tuesday afternoon in downtown Nairobi when our paths unexpectedly crossed under the awning of a bustling bookstore. With only one shared umbrella between us and a sudden downpour blocking our way, an impromptu coffee invitation turned into an extraordinary four-hour conversation spanning childhood dreams, favorite books, and silent understandings until the café doors finally locked for the evening.'],
+  ['2020', 'First adventure', 'Craving freedom from the city bustle, we packed two small canvas bags, loaded up the car at dawn, and drove southeast toward the breathtaking Kenyan coast with zero itinerary. Guided entirely by an eclectic road-trip soundtrack, sweeping savannah landscapes turning into coastal palm trees, and a shared passion for spontaneous discovery, we realized every mile felt like home when we were together.'],
+  ['2024', 'The proposal', 'During a weekend getaway beneath the sprawling canopy of an ancient baobab tree overlooking the Indian Ocean at sunset—the exact spot where we shared our very first seaside picnic years prior—Marvin waited for the golden hour glow, reached into his jacket, and asked the easiest, most life-defining question we could ever imagine answering.'],
 ]
 const schedule = [
-  [<Users key="users" />, '4:00 PM', 'Guest arrival', 'Welcome drinks & garden stroll'],
-  [<Heart key="heart" />, '4:30 PM', 'The ceremony', 'By the rose garden gazebo'],
-  [<Wine key="wine" />, '5:15 PM', 'Cocktail hour', 'Signature cocktails & canapés'],
-  [<Utensils key="utensils" />, '6:30 PM', 'Dinner & speeches', 'An evening under the stars'],
-  [<Sparkles key="sparkles" />, '8:30 PM', 'First dance', 'Music, dancing & celebration'],
+  [<Users key="users" />, '4:00 PM', 'Guest arrival', 'Welcome drinks infused with local botanicals, acoustic melodies, and a leisurely stroll through the lush tropical gardens.'],
+  [<Heart key="heart" />, '4:30 PM', 'The ceremony', 'Exchange of vows by the rose garden gazebo overlooking the serene Indian Ocean horizon as the sun begins to set.'],
+  [<Wine key="wine" />, '5:15 PM', 'Cocktail hour', 'Indulge in artisanal signature cocktails, freshly curated canapés, and joyful reunions with family and lifelong friends.'],
+  [<Utensils key="utensils" />, '6:30 PM', 'Dinner & speeches', 'A magnificent multi-course culinary experience served under a canopy of twinkling fairy lights and starlight, accompanied by heartfelt toasts.'],
+  [<Sparkles key="sparkles" />, '8:30 PM', 'First dance', 'Opening the dance floor with our favorite song, followed by live band performances, dancing, and celebratory toasts well into the night.'],
 ]
 const faqs = [
-  ['What is the dress code?', 'Black tie / garden elegance. Think timeless silhouettes, soft tailoring, and shoes you can wander in.'],
-  ['Are children invited?', 'We love your little ones, but this will be an adults-only celebration.'],
-  ['Can I bring a plus-one?', 'Your invitation will include the name of your guest if we have reserved a plus-one for you.'],
-  ['Where should I park?', 'Complimentary valet parking is available at the east entrance. A shuttle loops from the hotels from 3:30 PM.'],
+  ['What is the dress code?', 'Black tie / garden elegance. Think timeless silhouettes, soft flowing tailoring, and comfortable footwear suitable for wandering across lush lawns and sandy pathways.'],
+  ['Are children invited?', 'While we adore your little ones, we have chosen to make our wedding an intimate, adults-only celebration so that all our guests can fully relax and enjoy the evening.'],
+  ['Can I bring a plus-one?', 'Your formal invitation envelope will specify the name of your guest if a plus-one has been reserved specifically for you in our seating arrangements.'],
+  ['Where should I park?', 'Complimentary valet parking is available at the estate entrance. Additionally, a dedicated shuttle service will loop continuously from partner hotels starting at 3:30 PM.'],
 ]
 
 function Reveal({ children, className = '' }: { children: React.ReactNode; className?: string }) {
@@ -142,6 +142,16 @@ export default function Page() {
         <a className="scroll-cue" href="#countdown">Scroll to explore <ArrowDown /></a>
       </section>
 
+      <section className="section welcome-prose-section">
+        <Reveal>
+          <SectionKicker>Welcome dear friends</SectionKicker>
+          <h3>An invitation to <em>joy</em></h3>
+          <p className="lead">
+            There are moments in life that transcend the ordinary—moments when time pauses and everything aligns just as it was meant to be. As we prepare to exchange our vows surrounded by the people who have shaped our lives with love, laughter, and wisdom, we are overwhelmed with heartfelt gratitude. This celebration is not merely a wedding; it is a gathering of kindred spirits, a toast to cherished memories past, and the joyous beginning of all our tomorrows together.
+          </p>
+        </Reveal>
+      </section>
+
       <section className="section countdown-section" id="countdown"><Reveal><SectionKicker>The countdown</SectionKicker><h3>Until we say <em>“I do”</em></h3><div className="countdown"><div><strong>{String(time.days).padStart(3, '0')}</strong><span>Days</span></div><b>:</b><div><strong>{String(time.hours).padStart(2, '0')}</strong><span>Hours</span></div><b>:</b><div><strong>{String(time.minutes).padStart(2, '0')}</strong><span>Minutes</span></div><b>:</b><div><strong>{String(time.seconds).padStart(2, '0')}</strong><span>Seconds</span></div></div></Reveal></section>
 
       <section className="section story-section"><Reveal><SectionKicker>Our story</SectionKicker><h3>From one little <em>hello</em></h3><p className="lead">Somehow, the best things in life start in the most ordinary places.</p><div className="story-list">{story.map(([year, title, copy]) => <article className="story-item" key={year}><span className="story-year">{year}</span><div><h4>{title}</h4><p>{copy}</p></div></article>)}</div></Reveal></section>
@@ -150,9 +160,52 @@ export default function Page() {
 
       <section className="section schedule-section"><Reveal><SectionKicker>The day</SectionKicker><h3>A day to <em>remember</em></h3><div className="schedule">{schedule.map(([icon, time, title, copy], index) => <div className="schedule-row" key={index}><div className="schedule-icon">{icon}</div><div><span>{time}</span><h4>{title}</h4><p>{copy}</p></div></div>)}</div></Reveal></section>
 
-      <section className="split-section"><Reveal><div className="info-card burgundy"><Hotel /><SectionKicker>Stay awhile</SectionKicker><h3>Make a weekend<br /><em>of it</em></h3><p>We have gathered a few of our favorite nearby stays for you.</p><a href="#accommodations">Explore stays <ArrowUpRight /></a></div></Reveal><Reveal><div className="info-card champagne" id="accommodations"><MapPin /><SectionKicker>Find us</SectionKicker><h3>Oak & <em>Vine Estate</em></h3><p>4025 Solano Avenue<br />Napa, California 94558</p><a href="https://maps.google.com" target="_blank" rel="noreferrer">View on map <ExternalLink /></a></div></Reveal></section>
+      <section className="split-section">
+        <Reveal>
+          <div className="info-card burgundy">
+            <Hotel />
+            <SectionKicker>Stay awhile</SectionKicker>
+            <h3>Make a weekend<br /><em>of it</em></h3>
+            <p>We have partnered with premier coastal sanctuaries including Swahili Beach Resort and Sarova Whitesands to ensure your weekend stay along the Kenyan coast is extraordinarily comfortable and relaxing.</p>
+            <a href="#accommodations">Explore stays <ArrowUpRight /></a>
+          </div>
+        </Reveal>
+        <Reveal>
+          <div className="info-card champagne" id="accommodations">
+            <MapPin />
+            <SectionKicker>Find us</SectionKicker>
+            <h3>Serena Beach <em>Resort & Spa</em></h3>
+            <p>Shanzu Beach, North Coast<br />Mombasa, Kenya</p>
+            <a href="https://maps.google.com" target="_blank" rel="noreferrer">View on map <ExternalLink /></a>
+          </div>
+        </Reveal>
+      </section>
 
-      <section className="section details-section"><Reveal><SectionKicker>Good to know</SectionKicker><h3>The little <em>details</em></h3><div className="details-grid"><div><span className="detail-icon">✦</span><h4>Garden elegance</h4><p>Black tie encouraged. Comfortable shoes welcome — the celebration moves from lawn to dance floor.</p><div className="swatches"><span /><span /><span /><span /></div></div><div><span className="detail-icon"><Gift /></span><h4>Your presence is enough</h4><p>If you would like to honor us with a gift, we have a small registry and honeymoon fund below.</p><a href="#rsvp" className="text-link">View registry <ArrowUpRight /></a></div><div><span className="detail-icon"><Car /></span><h4>Getting there</h4><p>Valet parking is complimentary. Shuttle service begins at 3:30 PM from the partner hotels.</p></div></div></Reveal></section>
+      <section className="section details-section">
+        <Reveal>
+          <SectionKicker>Good to know</SectionKicker>
+          <h3>The little <em>details</em></h3>
+          <div className="details-grid">
+            <div>
+              <span className="detail-icon">✦</span>
+              <h4>Garden elegance</h4>
+              <p>We kindly request black tie attire with a touch of tropical garden elegance—think timeless floor-length silhouettes, sophisticated tailoring, and comfortable footwear suitable for wandering across lush seaside lawns and starlit open-air terraces as the evening breeze rolls in from the Indian Ocean.</p>
+              <div className="swatches"><span /><span /><span /><span /></div>
+            </div>
+            <div>
+              <span className="detail-icon"><Gift /></span>
+              <h4>Your presence is enough</h4>
+              <p>Your love, laughter, and presence on our wedding day is truly the greatest present of all. For those wishing to contribute to our future together, a curated registry and honeymoon adventure fund are available upon request to help us embark on our next great journey.</p>
+              <a href="#rsvp" className="text-link">View registry <ArrowUpRight /></a>
+            </div>
+            <div>
+              <span className="detail-icon"><Car /></span>
+              <h4>Getting there</h4>
+              <p>Complimentary valet parking and secure drop-off zones are available at the main estate entrance. Dedicated luxury shuttle services will also operate continuously from our partner coastal resorts starting at 3:30 PM to ensure seamless travel.</p>
+            </div>
+          </div>
+        </Reveal>
+      </section>
 
       <section className="section faq-section"><Reveal><SectionKicker>Questions</SectionKicker><h3>Before you <em>arrive</em></h3><div className="faq-list">{faqs.map(([q, a], i) => <div className="faq" key={q}><button onClick={() => setOpenFaq(openFaq === i ? null : i)} aria-expanded={openFaq === i}><span>{q}</span><ChevronDown className={openFaq === i ? 'rotated' : ''} /></button><AnimatePresence>{openFaq === i && <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>{a}</motion.p>}</AnimatePresence></div>)}</div></Reveal></section>
 
